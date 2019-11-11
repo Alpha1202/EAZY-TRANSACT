@@ -38,9 +38,9 @@ static async createAccount (req, res) {
         const userData = { firstName, lastName, email, phoneNumber, password: encryptedPassword, pin: encryptedpin, accountBalance }
         const newUserAccount = await User.create(userData);
 
-        // remove user password and pin
+        // remove user password 
         delete newUserAccount.dataValues.password;
-        delete newUserAccount.dataValues.pin;
+    
 
         // generate authentication token with user details
         const token = authToken(newUserAccount.dataValues)
@@ -76,9 +76,8 @@ static async login(req, res) {
     if (user) {
         if (bcrypt.compareSync(password, user.password)) {
 
-        // remove user password and pin
+        // remove user password
         delete user.dataValues.password;
-        delete user.dataValues.pin;
 
         // generate authentication token with user details
         const token = authToken(user.dataValues);
@@ -106,4 +105,6 @@ static async login(req, res) {
     });
   }
 }
+
+
 }

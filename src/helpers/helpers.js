@@ -11,4 +11,10 @@ export const authToken = userData => {
     return jwt.sign(userData, process.env.SECRET_KEY, { expiresIn: '24h' });
 }
 
+export const generateOTP = payload => {
+  return jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: '1h' });
+}
+
+
+
 
