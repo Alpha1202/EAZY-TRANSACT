@@ -20,10 +20,10 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
       },
       accountBalance: {
-        type: DataTypes.FLOAT,
+        type: DataTypes.STRING,
       },
       pin: {
-        type: DataTypes.INTEGER
+        type: DataTypes.STRING
       }
     },
   );
