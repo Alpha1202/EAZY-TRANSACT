@@ -24,8 +24,16 @@ module.exports = (sequelize, DataTypes) => {
       },
       pin: {
         type: DataTypes.STRING
+      },
+      otp: {
+        type: DataTypes.STRING
       }
     },
   );
+  User.associate = models => {
+    User.hasMany(models.Transaction, {
+      foreignKey: 'userId',
+    });
+  }
   return User;
 };
