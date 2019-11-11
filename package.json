@@ -1,0 +1,44 @@
+{
+  "name": "eazy-transact",
+  "version": "1.0.0",
+  "description": "Eazy-Transact is a smooth peer-2-peer transactions service. It enables a fast, secure and flexible funds transfer.",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run build && node lib/server",
+    "start:dev": "nodemon --exec babel-node src/server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Alpha1202/EAZY-TRANSACT.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Alpha1202/EAZY-TRANSACT/issues"
+  },
+  "homepage": "https://github.com/Alpha1202/EAZY-TRANSACT#readme",
+  "dependencies": {
+    "@babel/cli": "^7.7.0",
+    "@babel/core": "^7.7.2",
+    "@babel/node": "^7.7.0",
+    "@babel/polyfill": "^7.7.0",
+    "@babel/preset-env": "^7.7.1",
+    "@babel/register": "^7.7.0",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "moment": "^2.24.0",
+    "pg": "^7.12.1",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^5.21.2",
+    "sequelize-cli": "^5.5.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.4"
+  }
+}
