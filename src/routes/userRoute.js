@@ -9,7 +9,7 @@ const {
     validatePin,
     validatePassword
 } = validate
-const { createAccount } = userController;
+const { createAccount, login } = userController;
 
 const userRoute = Router();
 
@@ -21,6 +21,14 @@ userRoute.post('/signup',
     validatePassword,
     
     createAccount);
+
+userRoute.post('/signin',
+
+    validateEmail,
+    validatePassword, 
+    
+    login
+)
 
 export default userRoute;
 

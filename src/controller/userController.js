@@ -1,5 +1,6 @@
 import { hashPassword, authToken } from '../helpers/helpers';
 import models from '../db/models';
+import bcrypt from 'bcryptjs';
 
 const { User } = models;
 
@@ -55,5 +56,54 @@ static async createAccount (req, res) {
     catch(error) {
         return res.status(500).json({ message: error.message });
     }
+}
+/**
+ * @description Login a user
+ * @param {object} req
+ * @param {object} res
+ * @return {json} user logged in
+ * @memberof UserController
+ */
+static async login(req, res) {
+    try {
+    // accept user input
+    const { email, password } = req.body;
+
+    // fetch user from the database
+    const user = await User.findOne({ where: { email } });
+
+    // check if password match
+    if (user) {
+        if (bcrypt.compareSync(password, user.password)) {
+
+        // remove user password and pin
+        delete user.dataValues.password;
+        delete user.dataValues.pin;
+
+        // generate authentication token with user details
+        const token = authToken(user.dataValues);
+
+    // return a response to the user
+    return res.status(200).json({ 
+        message: `Login Successful`,
+        details: user,
+        token
+     });
+}
+    return res.status(401).json({
+    status: 401,
+    message: 'Invalid email or password'
+});
+}
+    return res.status(401).json({
+    status: 401,
+    message: 'Invalid email or password'
+  });
+} catch (error) {
+    return res.status(500).json({
+      status: 500,
+      message: error.message
+    });
+  }
 }
 }
