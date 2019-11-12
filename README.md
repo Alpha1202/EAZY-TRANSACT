@@ -2,6 +2,8 @@
 
 Eazy-Transact is a smooth peer-2-peer transactions service. It gives fast, secure and flexible funds transfer. 
 
+## Home Page
+[homepage](https://eazy-transact.herokuapp.com)
 
 ## Getting Started
 Clone the Repo.
@@ -30,5 +32,9 @@ The following tools will be needed to run this application successfully:
 * [Sequelize](https://sequelize.org/) - Sequelize is a promise-based Node.js ORM for Postgres, MySQL, MariaDB, SQLite and Microsoft SQL Server
 * [Postgres](https://www.postgresql.org/) - The World's Most Advanced Open Source Relational Database
 * [SendGrid](https://app.sendgrid.com/)
+
+## Api Documentation
+[Api Documentation](https://eazy-transact.herokuapp.com/api-docs/)
+
 ## Authors
 * **Nzubechukwu Nnamani**
