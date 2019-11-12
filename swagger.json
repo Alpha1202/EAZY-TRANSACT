@@ -1,0 +1,202 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "title": "Eazy Transact",
+      "description": "Eazy-Transact is a smooth peer-2-peer transactions service. It gives fast, secure and flexible funds transfer.",
+      "version": "1.0"
+    },
+    "host": "",
+    "basePath": "/api/",
+    "tags": [
+      {
+        "name": "Authentication",
+        "description": "SignUp and Signin users"
+      },
+      {
+        "name": "Transactions",
+        "description": "Initiate and successfully transfer funds"
+      }
+    ],
+    "paths": {
+      "/user/signin": {
+        "post": {
+          "tags": ["Auth"],
+          "summary": "POST API endpoint for user login",
+          "produces": ["application/json"],
+          "consumes": ["application/x-www-form-urlencoded"],
+          "parameters": [
+            {
+              "name": "email",
+              "in": "formData",
+              "description": "The email of the user",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "password",
+              "in": "formData",
+              "description": "The password for login in clear text",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation"
+            },
+            "400": {
+              "description": "Invalid username/password supplied"
+            },
+            "409": {
+              "description": "Invalid input"
+            }
+          }
+        }
+      },
+      "/user/signup": {
+        "post": {
+          "tags": ["Auth"],
+          "summary": "POST API endpoint for signing up new user",
+          "produces": ["application/json"],
+          "consumes": ["application/x-www-form-urlencoded"],
+          "parameters": [
+            {
+              "name": "firstName",
+              "in": "formData",
+              "description": "first  name",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "lastName",
+              "in": "formData",
+              "description": "last  name",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "email",
+              "in": "formData",
+              "description": "email of the user",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "phoneNumber",
+              "in": "formData",
+              "description": "phoneNumber of the user",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "password",
+              "in": "formData",
+              "description": "users password",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "pin",
+              "in": "formData",
+              "description": "users pin",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Account created successfully, Your pin is "
+            },
+            "500": {
+              "description": "Internal server error"
+            },
+            "409": {
+              "description": "Invalid input"
+            }
+          }
+        }
+      },
+      "/transaction/send": {
+         "post": {
+             "tags": ["Transactions"],
+             "summary": "POST API to initiate fund transfer",
+             "produces": ["application/json"],
+             "consumes": ["application/x-www-form-urlencoded"],
+             "parameters": [
+                 {
+                     "name": "amount",
+                     "in": "formData",
+                     "description": "The transfer amount",
+                     "required": true,
+                     "type": "string"
+                 },
+                 {
+                     "name": "transferTo",
+                     "in": "formData",
+                     "description": "The transfer receivers' email",
+                     "required": true,
+                     "type": "string"
+                 },
+                 {
+                     "name": "pin",
+                     "in": "formData",
+                     "description": "The sender's pin",
+                     "required": true,
+                     "type": "string"
+                 }
+             ],
+             "responses": {
+                "200": {
+                  "description": "successful operation"
+                },
+                "409": {
+                  "description": "Invalid input"
+                }
+              },
+              "security": [
+                {
+                  "JWT": []
+                }
+              ]
+         }
+      },
+      "/transaction/transfer": {
+          "post": {
+            "tags": ["Transactions"],
+            "summary": "POST API to initiate fund transfer",
+            "produces": ["application/json"],
+            "consumes": ["application/x-www-form-urlencoded"],
+            "parameters": [
+                {
+                    "name": "otp",
+                    "in": "formData",
+                    "description": "The One Time Password",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "responses": {
+                "200": {
+                  "description": "successful operation"
+                },
+                "409": {
+                  "description": "Invalid input"
+                }
+              },
+              "security": [
+                {
+                  "JWT": []
+                }
+              ]
+          }
+      }
+    },
+    "securityDefinitions": {
+      "JWT": {
+        "type": "apiKey",
+        "name": "token",
+        "in": "header"
+      }
+    }
+  }
+  
