@@ -2,10 +2,16 @@ import models from '../db/models';
 import bcrypt from 'bcryptjs';
 import { generateOTP } from '../helpers/helpers';
 import jwt from 'jsonwebtoken';
+import sgMail from '@sendgrid/mail';
 import config from '../db/config/config';
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 const { secret } = config;
 const { User, Transaction } = models;
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 
 /**
@@ -71,6 +77,18 @@ static async initiateTransfer(req, res) {
           }
     })
 
+    // send OTP to user
+    const msg = {
+
+        to: email,
+        from: 'eazyTransact@eazy.com',
+        subject: 'YOUR ONE-TIME-PASSWORD',
+        html: `<h3>Please Use this OTP to complete your transaction:<h3> 
+        <strong> ${otp} </strong>`
+    }
+
+    await sgMail.send(msg);
+    
 
     // return a notification to the user
     return res.status(200).json({
@@ -122,6 +140,17 @@ static async transfer(req, res) {
             }
         })
 
+        // send sender email notification
+        const senderMsg = {
+
+            to: email,
+            from: 'eazyTransact@eazy.com',
+            subject: 'DEBIT TRANSACTION ALERT',
+            html: `<h3>Dear ${email}, Your have just sent $${amount} to ${transferTo},
+            Your balance is $${updatedBalance}<h3>`
+        }
+    
+        await sgMail.send(senderMsg);
         
         // fetch receiver details
         const receiverDetails = await User.findOne({ raw: true, where: { email: transferTo } });
@@ -135,14 +164,29 @@ static async transfer(req, res) {
             }
         })
 
+        // send receiver email notification
+        const receiverMsg = {
+
+            to: transferTo,
+            from: 'eazyTransact@eazy.com',
+            subject: 'CREDIT TRANSACTION ALERT',
+            html: `<h3>Dear ${transferTo}, Your have just received $${amount} from ${email},
+            Your balance is $${newBalance}<h3>`
+        }
+    
+        await sgMail.send(receiverMsg);
+
+         // update the transaction table
         const transactionDetails = {
             sentTo: transferTo,
             receivedFrom: email,
             amount
         }
 
-        // update the transaction table
+       
         await Transaction.create(transactionDetails)
+
+        
 
         return res.status(200).json({
             status: 200,
