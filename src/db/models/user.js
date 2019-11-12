@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING
       },
       otp: {
-        type: DataTypes.STRING
+        type: DataTypes.TEXT
       }
     },
   );

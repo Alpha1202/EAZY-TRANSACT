@@ -32,7 +32,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       otp: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       createdAt: {
         allowNull: false,

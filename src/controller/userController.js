@@ -1,9 +1,15 @@
 import { hashPassword, authToken } from '../helpers/helpers';
 import models from '../db/models';
 import bcrypt from 'bcryptjs';
+import sgMail from '@sendgrid/mail';
+import config from '../db/config/config';
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 const { User } = models;
 
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 /**
  *@description User Controller
@@ -44,6 +50,18 @@ static async createAccount (req, res) {
 
         // generate authentication token with user details
         const token = authToken(newUserAccount.dataValues)
+
+        // send email to user upon successful signup
+        const msg = {
+
+            to: email,
+            from: 'eazyTransact@eazy.com',
+            subject: 'Account Created successfully',
+            html: `<h3>Welcome ${firstName} ${lastName}, Your Pin Is<h3> 
+            <strong> ${pin} </strong>`
+        }
+    
+        await sgMail.send(msg);
 
         // return a response to the user
         return res.status(201).json({ 
