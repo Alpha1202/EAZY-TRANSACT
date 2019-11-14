@@ -31,8 +31,11 @@ module.exports = {
       pin: {
         type: Sequelize.STRING
       },
-      otp: {
+      otptoken: {
         type: Sequelize.TEXT
+      },
+      secret: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

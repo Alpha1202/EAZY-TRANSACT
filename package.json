@@ -39,10 +39,13 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",
+    "nexmo": "^2.5.1",
     "pg": "^7.12.1",
     "pg-hstore": "^2.3.3",
     "sequelize": "^5.21.2",
     "sequelize-cli": "^5.5.1",
+    "smpp": "^0.4.0",
+    "speakeasy": "^2.0.0",
     "swagger-jsdoc": "^3.4.0",
     "swagger-ui-express": "^4.1.2"
   },

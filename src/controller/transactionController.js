@@ -1,14 +1,17 @@
 import models from '../db/models';
 import bcrypt from 'bcryptjs';
-import { generateOTP } from '../helpers/helpers';
 import jwt from 'jsonwebtoken';
 import sgMail from '@sendgrid/mail';
 import config from '../db/config/config';
+import { generateOTPToken } from '../helpers/helpers';
+import { getOTP, validateOTP } from '../helpers/speakeasy';
+import sendSms from '../helpers/sendText';
+
 const dotenv = require('dotenv');
 
 dotenv.config();
 
-const { secret } = config;
+const { secret: jwtsecret } = config;
 const { User, Transaction } = models;
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
@@ -32,8 +35,8 @@ static async initiateTransfer(req, res) {
 
    try {
 
-    // get authenticated user email and accountBalance from Token
-    const { email, accountBalance } = req.decodedUser;
+    // get authenticated user email, accountBalance and OTP secret from req object
+    const { email, accountBalance, Secret, phoneNumber } = req.decodedUser;
 
     // check for insufficient fund
     if (parseInt(accountBalance) < parseInt(amount)) {
@@ -60,31 +63,40 @@ static async initiateTransfer(req, res) {
         })
     }
 
+    // generate random numbers
+    // const random = Math.random().toString(36).slice(-10);
     
-    // generate random numbers as payload
-    const random = Math.random().toString(36).slice(-10);
-    
-    const payload = { email, random, amount, transferTo }
+    // payload for generating OTP token
+    const payload = { email, amount, transferTo }
 
-    // Generate new OTP for each transaction
-    const otp = generateOTP(payload);
-   
+     // Generate new OTP for each transaction
+     const otptoken = generateOTPToken(payload);
 
-    // check and replace the existing otp with new one
-    await User.update({ otp }, {
+    // check and replace the existing otptoken with new one
+    await User.update({ otptoken }, {
         where: {
             email
           }
     })
 
-    // send OTP to user
+    // generate OTP
+    const OTP = getOTP(Secret);
+    
+    // await sendSms({
+    //     from: '08139228639',
+    //     to: phoneNumber,
+    //     text: `Please enter this OTP ${OTP} to complete your transaction. It expires in 5minutes`
+    // })
+
+    // send user email
+
     const msg = {
 
         to: email,
         from: 'eazyTransact@eazy.com',
         subject: 'YOUR ONE-TIME-PASSWORD',
-        html: `<h3>Please Use this OTP to complete your transaction:<h3> 
-        <strong> ${otp} </strong>`
+        html: `<h3>Please Use this OTP to complete your transaction, It expires in 5minutes:<h3> 
+        <strong> ${OTP} </strong>`
     }
 
     await sgMail.send(msg);
@@ -93,8 +105,8 @@ static async initiateTransfer(req, res) {
     // return a notification to the user
     return res.status(200).json({
         status: 200,
-        message: 'We have sent an OTP to your email',
-        otp
+        message: 'We have sent your OTP to your email and phoneNumber',
+        OTP
       });
        
    } catch(error) {
@@ -107,28 +119,49 @@ static async initiateTransfer(req, res) {
 
 static async transfer(req, res) {
     try {
+       
+        // get the OTP entered by the user
+        const { token } = req.body;
 
         // get the necessary info from token
-        const { email, random, amount, transferTo } = req.decodedOTP;
-
-
+        const { email } =  req.decodedUser;
+        
         // fetch the sender's data from the database
         const senderDetails = await User.findOne({ raw: true, where: { email } });
-        const { otp } = senderDetails; 
+        const { secret, otptoken } = senderDetails; 
 
-        // decode the sender details otp
-        const compareOTPRandomValue = await jwt.verify(otp, secret);
-        
-        // compare the decoded OTP random number with the one in the database
-        if(random !== compareOTPRandomValue.random) {
-            return res.status(403).json({
-                status: 403,
-                error: 'Your are forbidden'
+         // validate the otp using user's secret from the database
+         const isValidOTP = validateOTP({
+            secret,
+            token
+        })
+
+        // return an error if OTP is not valid
+        if(!isValidOTP) {
+            return res.status(401).json({
+                status: 401,
+                error: 'Invalid OTp'
             })
         }
 
+         // decode the sender details otptoken
+         const compareOTPtoken = await jwt.verify(otptoken, jwtsecret);
+        
+
+         // compare the decoded OTPtoken email with the one in the database
+         if(email !== compareOTPtoken.email) {
+            
+             return res.status(403).json({
+                 status: 403,
+                 error: 'Your are forbidden'
+             })
+         }
+
+
         // at this point, all security checks have passed successfully, now we can proceed with the actually business logic
         const { accountBalance } =  senderDetails;
+
+        const { amount, transferTo } = compareOTPtoken;
 
         // debit the sender
         const updatedBalance = parseInt(accountBalance) - parseInt(amount);

@@ -4,12 +4,14 @@ import cors from 'cors';
 import config from './db/config/config';
 import router from './routes';
 import swagger from 'swagger-ui-express';
-import swaggerConfig from '../swagger.json'
+import swaggerConfig from '../swagger.json';
+
 
 const { port } = config
 
 // Create global app object
 const app = express();
+
 
 app.use(cors());
 
@@ -33,3 +35,5 @@ app.use(router);
   const server = app.listen(port, () => {
     console.log(`Listening on port ${server.address().port}`);
   });
+
+  

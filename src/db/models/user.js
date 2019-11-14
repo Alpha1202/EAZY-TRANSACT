@@ -25,8 +25,11 @@ module.exports = (sequelize, DataTypes) => {
       pin: {
         type: DataTypes.STRING
       },
-      otp: {
+      otptoken: {
         type: DataTypes.TEXT
+      },
+      secret: {
+        type: DataTypes.STRING
       }
     },
   );
