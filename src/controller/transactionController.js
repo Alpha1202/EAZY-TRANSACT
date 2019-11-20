@@ -22,7 +22,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY)
  *@class TransactionController
  */
 export default class TransactionController {
-    /**    
+/**    
 * handles funds transfer logic
 * @params {object} req
 * @params {object} res

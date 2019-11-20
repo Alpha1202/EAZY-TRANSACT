@@ -1,0 +1,18 @@
+---
+app:
+cache:
+ directories:
+   - node_modules
+install:
+ - "npm install"
+language: node_js
+node_js:
+ - node
+script:
+ - "npm run test"
+after_success:
+ - "npm run coverage"
+services:
+ - postgresql
+notifications:
+ email: false

@@ -23,6 +23,7 @@ export default class UserController {
 * @returns {object} a newly created user object
 */
 static async createAccount (req, res) {
+    
     try {
         // get user input
         const { firstName, lastName, email, phoneNumber, password, pin } = req.body;
@@ -80,6 +81,7 @@ static async createAccount (req, res) {
     }
     // catch any error
     catch(error) {
+        console.log(error.message)
         return res.status(500).json({ message: error.message });
     }
 }

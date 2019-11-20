@@ -7,6 +7,7 @@ import swagger from 'swagger-ui-express';
 import swaggerConfig from '../swagger.json';
 
 
+
 const { port } = config
 
 // Create global app object
@@ -32,8 +33,8 @@ app.get('/', (req, res) => {
 // makes use of the routes defined in the routes folder
 app.use(router);
 
-  const server = app.listen(port, () => {
-    console.log(`Listening on port ${server.address().port}`);
-  });
+const server = app.listen(port, () => {
+  console.log(`Listening on port ${server.address().port}`);
+});
 
-  
+export default server;

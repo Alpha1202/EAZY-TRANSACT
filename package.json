@@ -8,7 +8,10 @@
     "build": "babel src -d lib",
     "start:dev": "nodemon --exec babel-node src/server",
     "pretest": "npm run undo:migrate && npm run migrate && npm run seed",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "NODE_ENV=test nyc mocha --timeout 100000 --require @babel/register --exit",
+    "generate-lcov": "nyc report --reporter=text-lcov > lcov.info",
+    "coveralls-coverage": "coveralls < lcov.info",
+    "coverage": "nyc npm test && npm run generate-lcov && npm run coveralls-coverage",
     "migrate": "sequelize db:migrate",
     "undo:migrate": "sequelize db:migrate:undo:all",
     "seed": "sequelize db:seed:all"
@@ -31,6 +34,7 @@
     "@babel/polyfill": "^7.7.0",
     "@babel/preset-env": "^7.7.1",
     "@babel/register": "^7.7.0",
+    "@babel/runtime": "^7.7.2",
     "@sendgrid/mail": "^6.4.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
@@ -50,6 +54,13 @@
     "swagger-ui-express": "^4.1.2"
   },
   "devDependencies": {
-    "nodemon": "^1.19.4"
+    "@babel/plugin-transform-runtime": "^7.6.2",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "coveralls": "^3.0.7",
+    "mocha": "^6.2.2",
+    "nodemon": "^1.19.4",
+    "nyc": "^14.1.1"
   }
 }

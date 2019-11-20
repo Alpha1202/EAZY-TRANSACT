@@ -2,6 +2,11 @@
 
 Eazy-Transact is a smooth peer-2-peer transactions service. It gives fast, secure and flexible funds transfer. 
 
+## Badges
+[![Build Status](https://travis-ci.org/Alpha1202/EAZY-TRANSACT.svg?branch=develop)](https://travis-ci.org/Alpha1202/EAZY-TRANSACT)
+
+[![Coverage Status](https://coveralls.io/repos/github/Alpha1202/EAZY-TRANSACT/badge.svg?branch=develop)](https://coveralls.io/github/Alpha1202/EAZY-TRANSACT?branch=develop)
+
 ## Home Page
 [homepage](https://eazy-transact.herokuapp.com)
 
