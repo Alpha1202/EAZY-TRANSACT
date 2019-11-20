@@ -1,26 +1,14 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Transactions', {
+    return queryInterface.createTable('Credits', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      userId: {
-        type: Sequelize.INTEGER,
-      },
-      sentTo: {
-        type: Sequelize.STRING
-      },
-      receivedFrom: {
-        type: Sequelize.STRING
-      },
-      transactionType: {
-        type: Sequelize.ENUM('CREDIT', 'DEBIT'),
-      },
-      amount: {
+      title: {
         type: Sequelize.STRING
       },
       createdAt: {
@@ -34,6 +22,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Transactions');
+    return queryInterface.dropTable('Credits');
   }
 };

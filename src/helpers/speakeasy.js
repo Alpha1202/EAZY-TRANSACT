@@ -9,7 +9,7 @@ const getSecret = () => {
 const getOTP = (secret) => {
     
     const OTP = Speakeasy.totp({
-        secret,
+        secret: secret.base32,
         encoding: "base32",
         remaining: (300 - Math.floor((new Date()).getTime() / 1000.0 % 30)),
         
@@ -17,16 +17,14 @@ const getOTP = (secret) => {
     return OTP;
 }
 
-const validateOTP = ( { secret, token } ) => {
+const validateOTP = async ( { secret, token } ) => {
     
-    const validOTP = Speakeasy.totp.verify({
-        secret,
+   return Speakeasy.totp.verify({
+        secret: secret.base32,
         encoding: "base32",
-        token,
-        window: 0
+        token
     });
     
-    return validOTP;
 }
 
 module.exports = {

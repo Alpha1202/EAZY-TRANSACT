@@ -1,6 +1,7 @@
 import { hashPassword, authToken } from '../helpers/helpers';
 import models from '../db/models';
 import bcrypt from 'bcryptjs';
+import mg from '../helpers/nodemailer';
 import sgMail from '@sendgrid/mail';
 import { getSecret } from '../helpers/speakeasy';
 const dotenv = require('dotenv');
@@ -62,15 +63,15 @@ static async createAccount (req, res) {
 
         // send email to user upon successful signup
         const msg = {
-
             to: email,
             from: 'eazyTransact@eazy.com',
             subject: 'Account Created successfully',
-            html: `<h3>Welcome ${firstName} ${lastName}, Your Pin Is<h3> 
-            <strong> ${pin} </strong>`
+            text: `Welcome ${firstName} ${lastName}, Your Pin Is ${pin}`
         }
-    
-        await sgMail.send(msg);
+        mg.messages().send(msg, (error, body) => {
+            console.log(body);
+        });
+        // await smtpTransport.sendMail(msg);
 
         // return a response to the user
         return res.status(201).json({ 
@@ -81,7 +82,7 @@ static async createAccount (req, res) {
     }
     // catch any error
     catch(error) {
-        console.log(error.message)
+       
         return res.status(500).json({ message: error.message });
     }
 }
@@ -159,5 +160,40 @@ static async login(req, res) {
   }
 }
 
+static async getUserProfile(req, res) {
+    try{
+        // get user token
+        const { email } = req.decodedUser
 
+        // fetch user from db
+        const user = await User.findOne({ where: { email } });
+
+        if(user) {
+
+        // remove loggedInUser password, secret and from the user object
+        delete user.dataValues.password;
+        delete user.dataValues.secret;
+        delete user.dataValues.otp;
+        delete user.dataValues.id;
+        delete user.dataValues.pin;
+        delete user.dataValues.otptoken;
+        delete user.dataValues.createdAt;
+        delete user.dataValues.updatedAt;
+
+        // return a user profile
+        return res.status(200).json({ 
+        details: user,
+     });
+        }
+        else {
+            throw new error;
+        }
+    }
+    catch(error){
+        return res.status(500).json({
+            status: 500,
+            message: error.message
+          });
+    }
+}
 }

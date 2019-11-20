@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import userController from '../controller/userController';
+import verifyToken from '../middlewares/verifyTokenMiddleware';
 import validate from '../middlewares/userMiddleware';
 
 const { 
@@ -9,7 +10,7 @@ const {
     validatePin,
     validatePassword
 } = validate
-const { createAccount, login } = userController;
+const { createAccount, login, getUserProfile } = userController;
 
 const userRoute = Router();
 
@@ -29,6 +30,8 @@ userRoute.post('/signin',
     
     login
 )
+
+userRoute.get('/getuser', verifyToken, getUserProfile)
 
 export default userRoute;
 
